@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/restaurante/src",
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "webpack": true,
+    "tsConfigPath": "apps/restaurante/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/restaurante",
+  "projects": {
+    "restaurante": {
+      "type": "application",
+      "root": "apps/restaurante",
+      "entryFile": "main",
+      "sourceRoot": "apps/restaurante/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/restaurante/tsconfig.app.json"
+      }
+    },
+    "cliente": {
+      "type": "application",
+      "root": "apps/cliente",
+      "entryFile": "main",
+      "sourceRoot": "apps/cliente/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/cliente/tsconfig.app.json"
+      }
+    }
+  }
+}
