@@ -1,8 +1,10 @@
 
+import { createClientDto } from "apps/cliente/src/dto/cliente.dto";
 import { IsEmail, IsNumber, IsOptional, IsPositive, IsString, Min } from "class-validator";
 
-export class createClientDto {
+export class defineRestauranteDto {
 
+ 
     @IsString()
     @IsOptional()
     id?: string;
@@ -10,24 +12,19 @@ export class createClientDto {
     @IsString()
     name: string;
 
-    @IsEmail()
-    email: string;
-
-    // @IsPhoneNumber('CU')
-    @IsNumber()
-    phone: string;
+    @IsString()
+    address: string;
 
     @IsNumber({
         allowNaN: false,
         allowInfinity: false,
     })
     @IsPositive({
-        message: () => { return "La edad no es un número valido" }
+        message: () => { return "La capacidad no es un número valido" }
     })
-    @Min(18)
-    age: number;
-}
+    @Min(1)
+    capacity: number;
 
-export class restauranteClientsDto {
+    clients: createClientDto[]
 
 }

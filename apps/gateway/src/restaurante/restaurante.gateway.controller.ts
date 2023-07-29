@@ -1,44 +1,44 @@
-import { Body, Controller, Delete, Get, Param,  Patch, Post } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { RestauranteGateWayService } from './restaurante.gateway.service';
 import { createClientDto } from 'apps/cliente/src/dto/cliente.dto';
 import { updateClienteDto } from 'apps/cliente/src/dto/cliente.update.dto';
 
 @Controller('app')
-export class AppController {
-  constructor(private readonly appService: AppService) { }
+export class RestauranteGateWayController {
+  constructor(private readonly appService: RestauranteGateWayService) { }
 
 
-  @Post('newClient')
-  async nuevoCliente(
+  @Post('restaurante/create')
+  async definirRestaurante(
     @Body()
     cliente: createClientDto
   ) {
-    return this.appService.emitirNuevCliente(cliente)
+    return this.appService.definirRestaurante(cliente)
   }
 
-  @Get('clientes')
+  @Get('restaurante/list')
   findAll() {
     return this.appService.findAll()
   }
 
-  @Get('clientes/:id')
+  @Get('restaurante/:id')
   findOneCliente(
     @Param('id') id: string
   ) {
     return this.appService.findOne(id)
   }
 
-  @Patch('clientes/:id')
+  @Patch('restaurante/:id')
   updateCliente(
     @Param('id')
     id: string,
     @Body()
-    cliente: any
+    cliente: updateClienteDto
   ) {
     return this.appService.updateCliente(cliente, id)
   }
 
-  @Delete('clientes/:id')
+  @Delete('restaurante/:id')
   deleteCliente(
     @Param('id') id: string
   ) {
