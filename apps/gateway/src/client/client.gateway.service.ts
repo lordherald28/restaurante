@@ -1,14 +1,18 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { createClientDto } from 'apps/cliente/src/dto/cliente.dto';
 import { updateClienteDto } from 'apps/cliente/src/dto/cliente.update.dto';
 import { ICliente } from 'apps/cliente/src/schemas/cliente.schemas';
-import { Observable, from } from 'rxjs';
+
+import { Observable, from, map, of } from 'rxjs';
 // import { map, tap } from 'rxjs/operators';
 
 
 @Injectable()
 export class ClientGateWayService {
+
+  //Vars
+  private clienteUpdated = new ICliente();
 
   constructor(
     @Inject('CLIENTE_SERVICE')
@@ -24,10 +28,32 @@ export class ClientGateWayService {
 
 
   updateCliente(cliente: updateClienteDto, id: string): Observable<ICliente> {
-    // console.log(cliente)
-    // console.log(id)
+
     cliente = { ...cliente, id: id }
-    return from(this.clienteMicroService.send<ICliente, updateClienteDto>({ cmd: 'update' }, cliente))
+
+    //Verificar que exista el cliente antes de proceder a su actualizacion.
+    try {
+      this.findOne(id).pipe(
+        map(cli => {
+          console.log('No existe');
+          if (!cli) {
+            throw new HttpException('No encontrado.', HttpStatus.NOT_FOUND)
+          }
+          return cli
+        })
+      )
+
+      from(this.clienteMicroService.send<ICliente, updateClienteDto>({ cmd: 'update' }, cliente)).subscribe(cli => {
+        return cli
+      })
+      // return from(this.clienteMicroService.send<ICliente, updateClienteDto>({ cmd: 'update' }, cliente))
+      console.log(this.clienteUpdated)
+      return from(of(this.clienteUpdated))
+    } catch (error) {
+      console.log(error);
+      throw error
+    }
+
   }
 
   findOne(id: string): Observable<ICliente> {

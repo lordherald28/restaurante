@@ -33,7 +33,7 @@ export class ClientGateWayController {
     @Param('id')
     id: string,
     @Body()
-    cliente: any
+    cliente: updateClienteDto
   ) {
     return this.appService.updateCliente(cliente, id)
   }
