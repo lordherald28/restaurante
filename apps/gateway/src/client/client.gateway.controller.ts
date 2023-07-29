@@ -8,7 +8,7 @@ export class ClientGateWayController {
   constructor(private readonly appService: ClientGateWayService) { }
 
 
-  @Post('newClient')
+  @Post('client/create')
   async nuevoCliente(
     @Body()
     cliente: createClientDto
@@ -16,19 +16,19 @@ export class ClientGateWayController {
     return this.appService.emitirNuevCliente(cliente)
   }
 
-  @Get('clientes')
+  @Get('client/list')
   findAll() {
     return this.appService.findAll()
   }
 
-  @Get('clientes/:id')
+  @Get('client/:id')
   findOneCliente(
     @Param('id') id: string
   ) {
     return this.appService.findOne(id)
   }
 
-  @Patch('clientes/:id')
+  @Patch('client/:id')
   updateCliente(
     @Param('id')
     id: string,
@@ -38,7 +38,7 @@ export class ClientGateWayController {
     return this.appService.updateCliente(cliente, id)
   }
 
-  @Delete('clientes/:id')
+  @Delete('client/:id')
   deleteCliente(
     @Param('id') id: string
   ) {

@@ -4,6 +4,8 @@ import { ICliente } from './schemas/cliente.schemas';
 import { Model } from 'mongoose';
 import { createClientDto } from './dto/cliente.dto';
 import { updateClienteDto } from './dto/cliente.update.dto';
+import { ConflictException } from '@nestjs/common';
+
 
 @Injectable()
 export class ClienteService {
@@ -14,14 +16,22 @@ export class ClienteService {
 
   }
 
-  async create(cliente: createClientDto): Promise<ICliente> {
+
+  async create(cliente: createClientDto): Promise<ICliente | { error: string }> {
     try {
-      return await (new this.clientModel(cliente).save());
+      const existingCliente = await this.clientModel.findOne({ $or: [{ name: cliente.name }, { email: cliente.email }, { phone: cliente.phone }] }).exec();
+      if (existingCliente) {
+        console.log('El nombre o el correo ya existen');
+        return { error: 'El nombre o el correo ya existen' };
+      }
+      return await (new this.clientModel(cliente).save({ validateBeforeSave: true }));
     } catch (error) {
       // console.error(error);
-      throw error;
+      return { error: error.message };
     }
   }
+
+
 
   async findAll(): Promise<ICliente[]> {
     return await this.clientModel.find().exec();

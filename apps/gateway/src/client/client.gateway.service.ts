@@ -4,8 +4,9 @@ import { createClientDto } from 'apps/cliente/src/dto/cliente.dto';
 import { updateClienteDto } from 'apps/cliente/src/dto/cliente.update.dto';
 import { ICliente } from 'apps/cliente/src/schemas/cliente.schemas';
 
-import { Observable, from, map, of } from 'rxjs';
-// import { map, tap } from 'rxjs/operators';
+import { Observable, catchError, from, of } from 'rxjs';
+
+import { map, tap, mergeMap } from 'rxjs/operators';
 
 
 @Injectable()
@@ -23,7 +24,21 @@ export class ClientGateWayService {
 
   emitirNuevCliente(cliente: createClientDto): Observable<ICliente> {
     // console.log(cliente)
-    return from(this.clienteMicroService.send<ICliente, createClientDto>({ cmd: 'create' }, cliente));
+    try {
+      return from(this.clienteMicroService.send<ICliente, createClientDto>({ cmd: 'create' }, cliente))
+        .pipe(
+          map(cli => {
+            if (cli)
+              return cli;
+          }),
+          catchError(error => {
+            throw error
+          })
+        )
+    } catch (error) {
+      throw error
+    }
+
   }
 
 
@@ -33,31 +48,43 @@ export class ClientGateWayService {
 
     //Verificar que exista el cliente antes de proceder a su actualizacion.
     try {
-      this.findOne(id).pipe(
-        map(cli => {
-          console.log('No existe');
-          if (!cli) {
-            throw new HttpException('No encontrado.', HttpStatus.NOT_FOUND)
-          }
-          return cli
-        })
-      )
-
-      from(this.clienteMicroService.send<ICliente, updateClienteDto>({ cmd: 'update' }, cliente)).subscribe(cli => {
-        return cli
-      })
-      // return from(this.clienteMicroService.send<ICliente, updateClienteDto>({ cmd: 'update' }, cliente))
-      console.log(this.clienteUpdated)
-      return from(of(this.clienteUpdated))
+      return this.findOne(id)
+        .pipe(
+          mergeMap(cli => {
+            if (!cli) {
+              throw new HttpException(`No encontrado.`, HttpStatus.NOT_FOUND)
+            }
+            return this.clienteMicroService.send<ICliente, updateClienteDto>({ cmd: 'update' }, cliente)
+          }),
+          catchError(error => {
+            throw error
+          })
+        );
     } catch (error) {
-      console.log(error);
       throw error
     }
 
   }
 
   findOne(id: string): Observable<ICliente> {
-    return from(this.clienteMicroService.send<ICliente, string>({ cmd: 'get_one' }, id))
+
+    try {
+      return from(this.clienteMicroService.send<ICliente, string>({ cmd: 'get_one' }, id))
+        .pipe(
+          mergeMap(cli => {
+            if (!cli) {
+              throw new HttpException(`No encontrado.`, HttpStatus.NOT_FOUND)
+            }
+            return of(cli)
+          }),
+          catchError(error => {
+            throw error
+          })
+        );
+    } catch (error) {
+      throw error
+    }
+
   }
 
   delete(id: string): Observable<ICliente> {
