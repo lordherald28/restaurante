@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ICliente } from './schemas/cliente.schemas';
 import { Model } from 'mongoose';
+import { createClientDto } from './dto/cliente.dto';
+import { updateClienteDto } from './dto/cliente.update.dto';
 
 @Injectable()
 export class ClienteService {
@@ -12,7 +14,7 @@ export class ClienteService {
 
   }
 
-  async create(cliente: ICliente): Promise<ICliente> {
+  async create(cliente: createClientDto): Promise<ICliente> {
     try {
       return await (new this.clientModel(cliente).save());
     } catch (error) {
@@ -29,11 +31,18 @@ export class ClienteService {
     return await this.clientModel.find().exec();
   }
 
-  async update(cliente: ICliente, email: string): Promise<ICliente> {
-    return await this.clientModel.findOneAndUpdate({ name: cliente.name }, cliente).exec()
+  async update(cliente: updateClienteDto): Promise<ICliente> {
+    // console.log(cliente)
+    const clienteUpdate = await this.clientModel.findByIdAndUpdate(cliente.id, cliente, { new: true }).exec();
+    return clienteUpdate
+    // return await this.clientModel.findByIdAndUpdate(cliente.id, cliente, { new: true }).exec();
   }
 
-  async delete(name: string): Promise<ICliente> {
-    return await this.clientModel.findOneAndDelete({ name: name }).exec()
+  async delete(id: string): Promise<ICliente> {
+    return await this.clientModel.findByIdAndDelete(id).exec()
+  }
+
+  async findOne(id: string): Promise<ICliente> {
+    return await this.clientModel.findById(id).exec()
   }
 }

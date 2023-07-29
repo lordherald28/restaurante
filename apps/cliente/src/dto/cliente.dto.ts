@@ -1,7 +1,11 @@
 
-import { IsEmail, IsNumber, IsPhoneNumber, IsPositive, IsString, MaxLength, Min } from "class-validator";
+import { IsEmail, IsNumber, IsOptional, IsPositive, IsString, Min } from "class-validator";
 
-export class ClientCreate {
+export class createClientDto {
+
+    @IsString()
+    @IsOptional()
+    id?: string;
 
     @IsString()
     name: string;
@@ -9,7 +13,8 @@ export class ClientCreate {
     @IsEmail()
     email: string;
 
-    @IsPhoneNumber('CU')
+    // @IsPhoneNumber('CU')
+    @IsNumber()
     phone: string;
 
     @IsNumber({
@@ -17,9 +22,8 @@ export class ClientCreate {
         allowInfinity: false,
     })
     @IsPositive({
-        message: () => {return "La edad no es un numero valido"}
+        message: () => { return "La edad no es un numero valido" }
     })
-    @MaxLength(2)
     @Min(18)
     age: number;
 }

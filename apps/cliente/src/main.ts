@@ -4,6 +4,7 @@ import { NestFactory } from '@nestjs/core';
 // import { AppModule } from 'apps/restaurante/src/app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ClienteModule } from './cliente.module';
+import { ValidationPipe } from '@nestjs/common';
 
 /**
  * Esto es el servicio o App o MicroServicio de Clientes
@@ -25,7 +26,13 @@ async function bootstrap() {
       }
     },
   );
-
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      skipNullProperties: false,
+    })
+  )
   await app.listen();
   // await app.sta
 }

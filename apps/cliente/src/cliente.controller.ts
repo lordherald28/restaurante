@@ -1,8 +1,9 @@
 import { Controller, /* Get */ } from '@nestjs/common';
 import { ClienteService } from './cliente.service';
-import { EventPattern, MessagePattern } from '@nestjs/microservices';
-import { ICliente } from 'apps/interface/cliente.interface';
-import { Observable, of } from 'rxjs';
+import { MessagePattern } from '@nestjs/microservices';
+
+import { createClientDto } from './dto/cliente.dto';
+import { updateClienteDto } from './dto/cliente.update.dto';
 
 @Controller()
 export class ClienteController {
@@ -10,8 +11,8 @@ export class ClienteController {
 
 
   @MessagePattern({ cmd: 'create' })
-  create(cliente: ICliente) {
-    console.log('aqui')
+  create(cliente: createClientDto) {
+    // console.log('aqui')
     return this.clienteService.create(cliente)
   }
 
@@ -21,15 +22,23 @@ export class ClienteController {
     return this.clienteService.findAll()
   }
 
+  @MessagePattern({ cmd: 'get_one' })
+  async findOne(id: string) {
+    return this.clienteService.findOne(id)
+  }
+
   @MessagePattern({ cmd: 'update' })
-  async update(cliente: ICliente, email: string) {
-    return this.clienteService.update(cliente, email)
+  async update(cliente: updateClienteDto) {
+    // console.log(cliente)
+    // console.log(cliente.id)
+    return this.clienteService.update(cliente)
   }
 
   @MessagePattern({ cmd: 'delete' })
-  async delete(name: string) {
-    return this.clienteService.delete(name)
+  async delete(id: string) {
+    return this.clienteService.delete(id)
   }
+
 
 
 }
