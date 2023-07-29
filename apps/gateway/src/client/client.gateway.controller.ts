@@ -3,12 +3,12 @@ import { ClientGateWayService } from './client.gateway.service';
 import { createClientDto } from 'apps/cliente/src/dto/cliente.dto';
 import { updateClienteDto } from 'apps/cliente/src/dto/cliente.update.dto';
 
-@Controller('app')
+@Controller('client')
 export class ClientGateWayController {
   constructor(private readonly appService: ClientGateWayService) { }
 
 
-  @Post('client/create')
+  @Post('create')
   async nuevoCliente(
     @Body()
     cliente: createClientDto
@@ -16,19 +16,19 @@ export class ClientGateWayController {
     return this.appService.emitirNuevCliente(cliente)
   }
 
-  @Get('client/list')
+  @Get('list')
   findAll() {
     return this.appService.findAll()
   }
 
-  @Get('client/:id')
+  @Get(':id')
   findOneCliente(
     @Param('id') id: string
   ) {
     return this.appService.findOne(id)
   }
 
-  @Patch('client/:id')
+  @Patch(':id')
   updateCliente(
     @Param('id')
     id: string,
@@ -38,7 +38,7 @@ export class ClientGateWayController {
     return this.appService.updateCliente(cliente, id)
   }
 
-  @Delete('client/:id')
+  @Delete(':id')
   deleteCliente(
     @Param('id') id: string
   ) {

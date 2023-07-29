@@ -1,10 +1,19 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './restaurante.module';
+import { RestauranteModule } from './restaurante.module';
 import { ValidationPipe } from '@nestjs/common';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('api');
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+    RestauranteModule,
+    {
+      transport: Transport.REDIS,
+      options: {
+        host: 'localhost',
+        port: 6379
+      }
+    },
+  );
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -12,6 +21,7 @@ async function bootstrap() {
       skipNullProperties: false,
     })
   )
-  await app.listen(3001, () => { console.log('Inicializada la Aplicacion Principal, por el puerto: 3001') });
+
+  await app.listen();
 }
 bootstrap();

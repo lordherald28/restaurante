@@ -1,24 +1,19 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './restaurante.controller';
-import { AppService } from './restaurante.service';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import { DatabaseModule } from '@app/common';
+import { RestauranteController } from './restaurante.controller';
+import { RestauranteService } from './restaurante.service';
+
+import { MongooseModule } from '@nestjs/mongoose';
+import { IRestaurante, IRestauranteSchema } from './schema/restaurante.schemas';
 
 @Module({
   imports: [
-    // ClientsModule.register([
-    //   {
-    //     name: 'CLIENTE_SERVICE',
-    //     transport: Transport.REDIS,
-    //     options: {
-    //       host: 'localhost',
-    //       port: 6379
-    //     }
-    //   },
-    // ]),
-    // DatabaseModule,
+    MongooseModule.forRoot('mongodb://127.0.0.1:27017/restaurante'),
+    MongooseModule.forFeature([{
+      name: IRestaurante.name,
+      schema: IRestauranteSchema
+    }]),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [RestauranteController],
+  providers: [RestauranteService],
 })
-export class AppModule { }
+export class RestauranteModule { }

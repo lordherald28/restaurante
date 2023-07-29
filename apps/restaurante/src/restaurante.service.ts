@@ -1,52 +1,57 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
-import { createClientDto } from 'apps/cliente/src/dto/cliente.dto';
-import { updateClienteDto } from 'apps/cliente/src/dto/cliente.update.dto';
-import { ICliente } from 'apps/cliente/src/schemas/cliente.schemas';
+import { Injectable } from '@nestjs/common';
 import { Observable, from } from 'rxjs';
-// import { map, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
+import { defineRestauranteDto, updateRestauranteDto } from './dto';
+import { IRestaurante } from './schema/restaurante.schemas';
+import { InjectModel } from '@nestjs/mongoose';
+
+import { Model } from 'mongoose';
+
 
 
 @Injectable()
-export class AppService {
+export class RestauranteService {
 
   constructor(
-    @Inject('CLIENTE_SERVICE')
-    private readonly clienteMicroService: ClientProxy
+    @InjectModel(IRestaurante.name) private restauranteModel: Model<IRestaurante>
   ) {
 
   }
 
-  emitirNuevCliente(cliente: createClientDto): Observable<ICliente> {
+  async create(restaurante: defineRestauranteDto): Promise<IRestaurante | { error: string }> {
+    try {
+      const existeRestaurante = await this.restauranteModel.findOne({ name: restaurante.name }).exec();
+
+      if (existeRestaurante) {
+        // console.log('El nombre o el correo ya existen');
+        return { error: 'Ya existe un restaurante con ese nombre' };
+      }
+      return await (new this.restauranteModel(restaurante).save({ validateBeforeSave: true }));
+    } catch (error) {
+      // console.error(error);
+      return { error: error.message };
+    }
+  }
+
+  async findAll(): Promise<IRestaurante[]> {
+    return await this.restauranteModel.find().exec();
+  }
+
+  async update(restaurante: updateRestauranteDto): Promise<IRestaurante> {
     // console.log(cliente)
-    return from(this.clienteMicroService.send<ICliente, createClientDto>({ cmd: 'create' }, cliente));
+    const clienteUpdate = await this.restauranteModel.findByIdAndUpdate(restaurante.id, restaurante, { new: true }).exec();
+    return clienteUpdate
+    // return await this.clientModel.findByIdAndUpdate(cliente.id, cliente, { new: true }).exec();
   }
 
 
-  updateCliente(cliente: updateClienteDto, id: string): Observable<ICliente> {
-    // console.log(cliente)
-    // console.log(id)
-    cliente = { ...cliente, id: id }
-    return from(this.clienteMicroService.send<ICliente, updateClienteDto>({ cmd: 'update' }, cliente))
+  async delete(id: string): Promise<IRestaurante> {
+    return await this.restauranteModel.findByIdAndDelete(id).exec()
   }
 
-  findOne(id: string): Observable<ICliente> {
-    return from(this.clienteMicroService.send<ICliente, string>({ cmd: 'get_one' }, id))
+  async findOne(id: string): Promise<IRestaurante> {
+    console.log(id)
+    return await this.restauranteModel.findById(id).exec()
   }
-
-  delete(id: string): Observable<ICliente> {
-    return from(this.clienteMicroService.send<ICliente, string>({ cmd: 'delete' }, id))
-  }
-
-  async findAllClientes() {
-    const clientes = this.clienteMicroService.emit('clientes', [])
-    // clientes.subscribe(console.log)
-    return clientes
-  }
-
-  findAll(): Observable<ICliente[]> {
-    return from(this.clienteMicroService.send<ICliente[]>({ cmd: 'listado' }, {}));
-  }
-
 
 }

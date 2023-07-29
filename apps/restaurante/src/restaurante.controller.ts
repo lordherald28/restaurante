@@ -1,46 +1,48 @@
-import { Body, Controller, Delete, Get, Param,  Patch, Post } from '@nestjs/common';
-import { AppService } from './restaurante.service';
-import { createClientDto } from 'apps/cliente/src/dto/cliente.dto';
-import { updateClienteDto } from 'apps/cliente/src/dto/cliente.update.dto';
-
-@Controller('app')
-export class AppController {
-  constructor(private readonly appService: AppService) { }
+import { Body, Controller, Param } from '@nestjs/common';
+import { RestauranteService } from './restaurante.service';
+import { defineRestauranteDto } from './dto/restaurante.dto';
+import { updateRestauranteDto } from './dto/restaurante.update.dto';
+import { MessagePattern } from '@nestjs/microservices';
 
 
-  @Post('newClient')
-  async nuevoCliente(
-    @Body()
-    cliente: createClientDto
+@Controller()
+export class RestauranteController {
+  constructor(private readonly appService: RestauranteService) { }
+
+
+  @MessagePattern({ cmd: 'create' })
+  async create(
+    // @Body()
+    restuarante: defineRestauranteDto
   ) {
-    return this.appService.emitirNuevCliente(cliente)
+    return this.appService.create(restuarante)
   }
 
-  @Get('clientes')
+  @MessagePattern({ cmd: 'listado' })
   findAll() {
     return this.appService.findAll()
   }
 
-  @Get('clientes/:id')
-  findOneCliente(
-    @Param('id') id: string
+  @MessagePattern({ cmd: 'get_one' })
+  findOne(
+    id: string
   ) {
     return this.appService.findOne(id)
   }
 
-  @Patch('clientes/:id')
-  updateCliente(
+  @MessagePattern({ cmd: 'update' })
+  update(
     @Param('id')
     id: string,
     @Body()
-    cliente: any
+    cliente: updateRestauranteDto
   ) {
-    return this.appService.updateCliente(cliente, id)
+    return this.appService.update(cliente)
   }
 
-  @Delete('clientes/:id')
-  deleteCliente(
-    @Param('id') id: string
+  @MessagePattern({ cmd: 'delete' })
+  delete(
+    id: string
   ) {
     return this.appService.delete(id)
   }

@@ -12,6 +12,6 @@ async function bootstrap() {
       skipNullProperties: false
     })
   )
-  await app.listen(3001);
+  await app.listen(3001, () => { console.log('Sistema inicializado por el puerto: 3001') });
 }
 bootstrap();

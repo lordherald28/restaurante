@@ -1,10 +1,9 @@
 
-import { createClientDto } from "apps/cliente/src/dto/cliente.dto";
-import { IsEmail, IsNumber, IsOptional, IsPositive, IsString, Min } from "class-validator";
+import { IsNumber, IsOptional, IsPositive, IsString, Min } from "class-validator";
 
 export class defineRestauranteDto {
 
- 
+
     @IsString()
     @IsOptional()
     id?: string;
@@ -13,7 +12,8 @@ export class defineRestauranteDto {
     name: string;
 
     @IsString()
-    address: string;
+    @IsOptional()
+    address?: string;
 
     @IsNumber({
         allowNaN: false,
@@ -24,7 +24,5 @@ export class defineRestauranteDto {
     })
     @Min(1)
     capacity: number;
-
-    clients: createClientDto[]
 
 }
