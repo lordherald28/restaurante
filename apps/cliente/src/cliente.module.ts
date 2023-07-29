@@ -14,5 +14,6 @@ import { ICliente, IClienteSchema } from './schemas/cliente.schemas';
   ],
   controllers: [ClienteController],
   providers: [ClienteService],
+  exports:[MongooseModule]
 })
 export class ClienteModule { }

@@ -17,7 +17,7 @@ export class RestauranteGateWayController {
     return this.appService.create(restuarante)
   }
 
-  @Get('list')
+  @Get()
   findAll() {
     return this.appService.findAll()
   }

@@ -5,6 +5,8 @@ import { ClientGateWayController } from './client/client.gateway.controller';
 import { ClientGateWayService } from './client/client.gateway.service';
 import { RestauranteGateWayController } from './restaurante/restaurante.gateway.controller';
 import { RestauranteGateWayService } from './restaurante/restaurante.gateway.service';
+import { OrderGateWayController } from './order/order.gateway.controller';
+import { OrderGateWayService } from './order/order.gateway.service';
 
 @Module({
   imports: [
@@ -14,7 +16,8 @@ import { RestauranteGateWayService } from './restaurante/restaurante.gateway.ser
         transport: Transport.REDIS,
         options: {
           host: 'localhost',
-          port: 6379
+          port: 6379,
+
         }
       },
       {
@@ -25,9 +28,17 @@ import { RestauranteGateWayService } from './restaurante/restaurante.gateway.ser
           port: 6379
         }
       },
+      {
+        name: 'ORDER_SERVICE',
+        transport: Transport.REDIS,
+        options: {
+          host: 'localhost',
+          port: 6379
+        }
+      },
     ]),
   ],
-  controllers: [ClientGateWayController,RestauranteGateWayController],
-  providers: [ClientGateWayService,RestauranteGateWayService],
+  controllers: [ClientGateWayController, RestauranteGateWayController, OrderGateWayController],
+  providers: [ClientGateWayService, RestauranteGateWayService, OrderGateWayService],
 })
 export class GatewayModule { }

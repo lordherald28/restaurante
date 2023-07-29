@@ -25,7 +25,7 @@ export class ClientGateWayService {
   emitirNuevCliente(cliente: createClientDto): Observable<ICliente> {
     // console.log(cliente)
     try {
-      return from(this.clienteMicroService.send<ICliente, createClientDto>({ cmd: 'create' }, cliente))
+      return from(this.clienteMicroService.send<ICliente, createClientDto>({ cmd: 'create_cliente' }, cliente))
         .pipe(
           map(cli => {
             if (cli)
@@ -54,7 +54,7 @@ export class ClientGateWayService {
             if (!cli) {
               throw new HttpException(`No encontrado.`, HttpStatus.NOT_FOUND)
             }
-            return this.clienteMicroService.send<ICliente, updateClienteDto>({ cmd: 'update' }, cliente)
+            return this.clienteMicroService.send<ICliente, updateClienteDto>({ cmd: 'update_cliente' }, cliente)
           }),
           catchError(error => {
             throw error
@@ -69,7 +69,7 @@ export class ClientGateWayService {
   findOne(id: string): Observable<ICliente> {
 
     try {
-      return from(this.clienteMicroService.send<ICliente, string>({ cmd: 'get_one' }, id))
+      return from(this.clienteMicroService.send<ICliente, string>({ cmd: 'get_one_cliente' }, id))
         .pipe(
           mergeMap(cli => {
             if (!cli) {
@@ -88,7 +88,7 @@ export class ClientGateWayService {
   }
 
   delete(id: string): Observable<ICliente> {
-    return from(this.clienteMicroService.send<ICliente, string>({ cmd: 'delete' }, id))
+    return from(this.clienteMicroService.send<ICliente, string>({ cmd: 'delete_cliente' }, id))
   }
 
   async findAllClientes() {
@@ -98,7 +98,7 @@ export class ClientGateWayService {
   }
 
   findAll(): Observable<ICliente[]> {
-    return from(this.clienteMicroService.send<ICliente[]>({ cmd: 'listado' }, {}));
+    return from(this.clienteMicroService.send<ICliente[]>({ cmd: 'listado_clientes' }, {}));
   }
 
 

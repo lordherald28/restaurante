@@ -10,7 +10,7 @@ export class RestauranteController {
   constructor(private readonly appService: RestauranteService) { }
 
 
-  @MessagePattern({ cmd: 'create' })
+  @MessagePattern({ cmd: 'create_restaurante' })
   async create(
     // @Body()
     restuarante: defineRestauranteDto
@@ -18,29 +18,26 @@ export class RestauranteController {
     return this.appService.create(restuarante)
   }
 
-  @MessagePattern({ cmd: 'listado' })
+  @MessagePattern({ cmd: 'listado_restaurante' })
   findAll() {
     return this.appService.findAll()
   }
 
-  @MessagePattern({ cmd: 'get_one' })
+  @MessagePattern({ cmd: 'get_one_restaurante' })
   findOne(
     id: string
   ) {
     return this.appService.findOne(id)
   }
 
-  @MessagePattern({ cmd: 'update' })
+  @MessagePattern({ cmd: 'update_restaurante' })
   update(
-    @Param('id')
-    id: string,
-    @Body()
     cliente: updateRestauranteDto
   ) {
     return this.appService.update(cliente)
   }
 
-  @MessagePattern({ cmd: 'delete' })
+  @MessagePattern({ cmd: 'delete_restaurante' })
   delete(
     id: string
   ) {

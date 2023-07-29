@@ -50,7 +50,7 @@ export class RestauranteService {
   }
 
   async findOne(id: string): Promise<IRestaurante> {
-    console.log(id)
+    // console.log(id)
     return await this.restauranteModel.findById(id).exec()
   }
 

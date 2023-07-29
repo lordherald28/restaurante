@@ -24,7 +24,7 @@ export class RestauranteGateWayService {
   create(restaurante: defineRestauranteDto): Observable<IRestaurante> {
     // console.log(cliente)
     try {
-      return from(this.restauranteMicroService.send<IRestaurante, defineRestauranteDto>({ cmd: 'create' }, restaurante))
+      return from(this.restauranteMicroService.send<IRestaurante, defineRestauranteDto>({ cmd: 'create_restaurante' }, restaurante))
         .pipe(
           map(cli => {
             if (cli)
@@ -50,7 +50,7 @@ export class RestauranteGateWayService {
             if (!cli) {
               throw new HttpException(`No encontrado.`, HttpStatus.NOT_FOUND)
             }
-            return this.restauranteMicroService.send<IRestaurante, updateClienteDto>({ cmd: 'update' }, restaurante)
+            return this.restauranteMicroService.send<IRestaurante, updateClienteDto>({ cmd: 'update_restaurante' }, restaurante)
           }),
           catchError(error => {
             throw error
@@ -65,7 +65,7 @@ export class RestauranteGateWayService {
   findOne(id: string): Observable<IRestaurante> {
     try {
       // console.log(id)
-      return from(this.restauranteMicroService.send<IRestaurante, string>({ cmd: 'get_one' }, id))
+      return from(this.restauranteMicroService.send<IRestaurante, string>({ cmd: 'get_one_restaurante' }, id))
         .pipe(
           mergeMap(res => {
             if (!res) {
@@ -84,12 +84,12 @@ export class RestauranteGateWayService {
   }
 
   delete(id: string): Observable<IRestaurante> {
-    return from(this.restauranteMicroService.send<IRestaurante, string>({ cmd: 'delete' }, id))
+    return from(this.restauranteMicroService.send<IRestaurante, string>({ cmd: 'delete_restaurante' }, id))
   }
 
 
   findAll(): Observable<IRestaurante[]> {
-    return from(this.restauranteMicroService.send<IRestaurante[]>({ cmd: 'listado' }, {}));
+    return from(this.restauranteMicroService.send<IRestaurante[]>({ cmd: 'listado_restaurante' }, {}));
   }
 
 
