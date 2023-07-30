@@ -1,7 +1,7 @@
 
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ICliente } from 'apps/cliente/src/schemas/cliente.schemas';
+// import { ICliente } from 'apps/cliente/src/schemas/cliente.schemas';
 import { Document } from 'mongoose';
 // import { type } from 'os';
 import * as mongoose from 'mongoose';
@@ -27,10 +27,10 @@ export class IRestaurante {
     @Prop()
     Address: string;
 
-    @Prop({
-        type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'IClient' }]
-    })
-    clients: ICliente[]
+    // @Prop({
+    //     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'IClient' }]
+    // })
+    // clients: ICliente[]
 }
 
 export const IRestauranteSchema = SchemaFactory.createForClass(IRestaurante);

@@ -42,10 +42,8 @@ export class ClienteService {
   }
 
   async update(cliente: updateClienteDto): Promise<ICliente> {
-    // console.log(cliente)
     const clienteUpdate = await this.clientModel.findByIdAndUpdate(cliente.id, cliente, { new: true }).exec();
     return clienteUpdate
-    // return await this.clientModel.findByIdAndUpdate(cliente.id, cliente, { new: true }).exec();
   }
 
   async delete(id: string): Promise<ICliente> {

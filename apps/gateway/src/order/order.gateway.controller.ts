@@ -13,13 +13,6 @@ export class OrderGateWayController {
     @Body()
     order: CreateOrderDto
   ) {
-    // this.appService.create(order).subscribe(console.log)
-  //  return this.appService.create(order).subscribe(response => {
-  //     console.log(response)
-  //     if (response instanceof HttpException) {
-  //       return response
-  //     }
-  //   })
   return this.appService.create(order)
   }
 
@@ -28,12 +21,7 @@ export class OrderGateWayController {
     return this.appService.findAll()
   }
 
-  @Get(':id')
-  findOne(
-    @Param('id') id: string
-  ) {
-    return this.appService.findOne(id)
-  }
+
 
 
 }

@@ -44,13 +44,13 @@ export class OrderGateWayService {
       const restaurant$ = this.restauranteMicroService.send<IRestaurante, string>({ cmd: 'get_one_restaurante' }, order.restaurant);
       const cliente$ = this.clienteMicroService.send<ICliente, string>({ cmd: 'get_one_cliente' }, order.client);
 
-      // combinar los dos observables
+      // combinar los 3 observables
       const combined$ = combineLatest([orders$, restaurant$, cliente$]);
 
       // procesar los datos
       const result$ = combined$.pipe(
         mergeMap(([orderCount, restaurant, client]) => {
-          // verificamos si el restaurante ha alcanzado su capacidad máxima
+          // verificamos si el restaurante ha alcanzado su capacidad máxima y la edad del cliente.
           if (client.age < 18) {
             throw new HttpException(`El cliente ${client.name} no cumple con los requisitos para ordenar en el restuarante. Edad de ${client.name} : ${client.age} años`, HttpStatus.BAD_REQUEST)
           }
@@ -68,20 +68,6 @@ export class OrderGateWayService {
       );
 
       return result$;
-      /*    const client$ = this.clienteMicroService.send<ICliente, string>({ cmd: 'get_one_cliente' }, order.client)
-           .pipe(
-             mergeMap((client) => {
-               if (client.age < 18) {
-                 throw new HttpException('Debe ser mayor de edad', HttpStatus.BAD_REQUEST)
-               }
-               return this.orderMicroService.send<IOrder, CreateOrderDto>({ cmd: 'create_orden' }, order)
-             }),
-             catchError((error: HttpException) => {
-               return throwError(() => error)
-             })
-           )
-   
-         return client$ */
 
     } catch (error) {
       throw error
@@ -94,53 +80,7 @@ export class OrderGateWayService {
     return this.restauranteMicroService.send<number, string>({ cmd: 'count_order_today' }, restaurantId)
   }
 
-  /* 
-    updateCliente(cliente: updateClienteDto, id: string): Observable<ICliente> {
-  
-      cliente = { ...cliente, id: id }
-  
-      //Verificar que exista el cliente antes de proceder a su actualizacion.
-      try {
-        return this.findOne(id)
-          .pipe(
-            mergeMap(cli => {
-              if (!cli) {
-                throw new HttpException(`No encontrado.`, HttpStatus.NOT_FOUND)
-              }
-              return this.orderMicroService.send<ICliente, updateClienteDto>({ cmd: 'update' }, cliente)
-            }),
-            catchError(error => {
-              throw error
-            })
-          );
-      } catch (error) {
-        throw error
-      }
-  
-    }
-   */
-
-  findOne(id: string): Observable<any> {
-
-    try {
-      return from(this.orderMicroService.send<ICliente, string>({ cmd: 'get_one' }, id))
-        .pipe(
-          mergeMap(cli => {
-            if (!cli) {
-              throw new HttpException(`No encontrado.`, HttpStatus.NOT_FOUND)
-            }
-            return of(cli)
-          }),
-          catchError(error => {
-            throw error
-          })
-        );
-    } catch (error) {
-      throw error
-    }
-
-  }
-
+ 
   findAll(): Observable<IOrder[]> {
     console.log('aquiiii')
     return from(this.orderMicroService.send<IOrder[]>({ cmd: 'listado_ordenes' }, {}));

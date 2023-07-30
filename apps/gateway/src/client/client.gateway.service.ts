@@ -23,7 +23,6 @@ export class ClientGateWayService {
   }
 
   emitirNuevCliente(cliente: createClientDto): Observable<ICliente> {
-    // console.log(cliente)
     try {
       return from(this.clienteMicroService.send<ICliente, createClientDto>({ cmd: 'create_cliente' }, cliente))
         .pipe(
@@ -45,7 +44,6 @@ export class ClientGateWayService {
   updateCliente(cliente: updateClienteDto, id: string): Observable<ICliente> {
 
     cliente = { ...cliente, id: id }
-
     //Verificar que exista el cliente antes de proceder a su actualizacion.
     try {
       return this.findOne(id)
@@ -93,7 +91,6 @@ export class ClientGateWayService {
 
   async findAllClientes() {
     const clientes = this.clienteMicroService.emit('clientes', [])
-    // clientes.subscribe(console.log)
     return clientes
   }
 

@@ -12,7 +12,6 @@ export class RestauranteController {
 
   @MessagePattern({ cmd: 'create_restaurante' })
   async create(
-    // @Body()
     restuarante: defineRestauranteDto
   ) {
     return this.appService.create(restuarante)

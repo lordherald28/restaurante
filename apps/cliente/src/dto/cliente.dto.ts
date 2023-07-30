@@ -24,7 +24,7 @@ export class createClientDto {
     @IsPositive({
         message: () => { return "La edad no es un número valido" }
     })
-    @Min(18)
+    @Min(18,{message:'Debes ser mayor de edad, edad mínima permitida es 18 años'})
     age: number;
 }
 

@@ -23,12 +23,10 @@ export class RestauranteService {
       const existeRestaurante = await this.restauranteModel.findOne({ name: restaurante.name }).exec();
 
       if (existeRestaurante) {
-        // console.log('El nombre o el correo ya existen');
         return { error: 'Ya existe un restaurante con ese nombre' };
       }
       return await (new this.restauranteModel(restaurante).save({ validateBeforeSave: true }));
     } catch (error) {
-      // console.error(error);
       return { error: error.message };
     }
   }
@@ -38,10 +36,8 @@ export class RestauranteService {
   }
 
   async update(restaurante: updateRestauranteDto): Promise<IRestaurante> {
-    // console.log(cliente)
     const clienteUpdate = await this.restauranteModel.findByIdAndUpdate(restaurante.id, restaurante, { new: true }).exec();
     return clienteUpdate
-    // return await this.clientModel.findByIdAndUpdate(cliente.id, cliente, { new: true }).exec();
   }
 
 
@@ -50,7 +46,6 @@ export class RestauranteService {
   }
 
   async findOne(id: string): Promise<IRestaurante> {
-    // console.log(id)
     return await this.restauranteModel.findById(id).exec()
   }
 

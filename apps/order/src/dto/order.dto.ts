@@ -6,11 +6,10 @@ export class CreateOrderDto {
 
   @IsNotEmpty()
   @IsString()
-  // @MinLength(10)
   description: string;
 
   @IsNotEmpty()
-  // @IsMongoId()
+
   @IsString()
   client: string;
 
@@ -18,7 +17,6 @@ export class CreateOrderDto {
   @IsString()
   date: string;
 
-  // @IsMongoId()
   @IsString()
   restaurant: string;
 

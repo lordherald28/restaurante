@@ -6,14 +6,6 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ClienteModule } from './cliente.module';
 import { ValidationPipe } from '@nestjs/common';
 
-/**
- * Esto es el servicio o App o MicroServicio de Clientes
- */
-// async function bootstrap() {
-//   const app = await NestFactory.create(ClienteModule);
-//   await app.listen(3000);
-// }
-// bootstrap();
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -34,19 +26,5 @@ async function bootstrap() {
     })
   )
   await app.listen();
-  // await app.sta
 }
 bootstrap();
-
-// async function bootstrap() {
-//   const app = await NestFactory.create(ClienteModule);
-//   app.connectMicroservice({
-//     transport: Transport.REDIS,
-//     options: {
-//       host: 'localhost',
-//       port: 6379
-//     }
-//   });
-//   app.startAllMicroservices();
-// }
-// bootstrap();

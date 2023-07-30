@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ICliente } from '../../../cliente/src/schemas/cliente.schemas';
-import { IRestaurante } from 'apps/restaurante/src/schema/restaurante.schemas';
+import { IRestaurante } from '../../../restaurante/src/schema/restaurante.schemas';
 
 import * as mongoose from 'mongoose';
 
@@ -32,7 +32,7 @@ export class IOrder {
     restaurant: IRestaurante
 
     @Prop()
-    date:Date;
+    date: Date;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(IOrder);
